@@ -12,8 +12,8 @@ struct NewsView: View {
     
     @StateObject private var viewModel = NewsViewModel()
     @State private var topicToSearch = ""
-    @State  var openURL = false
-    @State  var articleSelected: Noticia?
+    @State var openURL = false
+    @State var articleSelected: Noticia?
     
     var body: some View {
         NavigationStack {
@@ -24,8 +24,10 @@ struct NewsView: View {
                 List(viewModel.news, id: \.title) { article in
                     
                     Button {
-                        articleSelected = article
-                        openURL = true
+                        self.articleSelected = article
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            openURL = true
+                        }
                         
                     } label: {
                         ArticleNewCell(article: article)
@@ -39,11 +41,15 @@ struct NewsView: View {
                 
             }
             .sheet(isPresented: $openURL, content: {
+                ///Go to Web Page
                 if let url = articleSelected?.url {
                     safari(urlString: url)
                 } else {
-                    EmptyView()
+                    DetailArticle(article: articleSelected ?? MockData.article)
                 }
+                
+                ///go to detail view
+//                DetailArticle(article: articleSelected ?? MockData.article)
             })
             .searchable(text: $topicToSearch, prompt: "Write your topic to search news")
             .onChange(of: topicToSearch, perform: { newTopic in

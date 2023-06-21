@@ -18,8 +18,10 @@ enum APError: Error {
 class NetworkManager: NSObject {
     static let shared = NetworkManager()
     private let cache = NSCache<NSString, UIImage>()
+    ///a1d105c3794c4e9db94dff5d4a19fda9
+    ///f0797ef3b62d4b90a400ed224e0f82b7
     
-    static let baseURL = "https://newsapi.org/v2/everything?apiKey=f0797ef3b62d4b90a400ed224e0f82b7&language=es&q="
+    static let baseURL = "https://newsapi.org/v2/everything?apiKey=a1d105c3794c4e9db94dff5d4a19fda9&language=es&q="
     
     private override init() {}
     
