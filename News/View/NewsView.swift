@@ -10,28 +10,26 @@ import SwiftUI
 struct NewsView: View {
     
     @StateObject private var viewModel = NewsViewModel()
-    @State private var topicSelected = ""
-    private let topics = ["economia", "ai", "apple", "twitter", "calor"]
+    
+  
     
     var body: some View {
         NavigationStack {
             VStack {
-                Picker("List of topics", selection: $topicSelected, content: {
-                    ForEach(topics, id: \.self) { topic in
-                        Text(topic)
-                    }
-                }).pickerStyle(.segmented)
-                .padding(15)
-                .onChange(of: topicSelected) { newTopic in
-                    viewModel.getNews(topic: newTopic)
-                }
-
+                TopicSegmentedView(viewModel: viewModel)
                 
                 List(viewModel.news, id: \.title) { article in
                     ArticleNewCell(article: article)
                 }.listStyle(.plain)
-            }.onAppear {
-                viewModel.getNews(topic: topics[0])
+                
+                if viewModel.isLoading {
+                    LoadingView()
+                }
+                
+            }.onAppear { viewModel.getNews(topic: viewModel.topics.first!)}
+            
+            .alert(item: $viewModel.alertItem) { alertItem in
+                Alert(title: alertItem.title, message: alertItem.message, dismissButton: alertItem.dismissButton)
             }
             .navigationBarTitle("Top Global News")
         }
@@ -43,5 +41,4 @@ struct ContentView_Previews: PreviewProvider {
         NewsView()
     }
 }
-
 
