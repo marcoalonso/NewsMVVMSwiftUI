@@ -6,12 +6,14 @@
 //
 
 import SwiftUI
+import SafariServices
 
 struct NewsView: View {
     
     @StateObject private var viewModel = NewsViewModel()
     @State private var topicToSearch = ""
-  
+    @State  var openURL = false
+    @State  var articleSelected: Noticia?
     
     var body: some View {
         NavigationStack {
@@ -20,9 +22,15 @@ struct NewsView: View {
                 TopicSegmentedView(viewModel: viewModel)
                 
                 List(viewModel.news, id: \.title) { article in
-                    NavigationLink(destination: WebView(urlString: article.url ?? "")) {
+                    
+                    Button {
+                        articleSelected = article
+                        openURL = true
+                        
+                    } label: {
                         ArticleNewCell(article: article)
                     }
+
                 }.listStyle(.inset)
                 
                 if viewModel.isLoading {
@@ -30,6 +38,13 @@ struct NewsView: View {
                 }
                 
             }
+            .sheet(isPresented: $openURL, content: {
+                if let url = articleSelected?.url {
+                    safari(urlString: url)
+                } else {
+                    EmptyView()
+                }
+            })
             .searchable(text: $topicToSearch, prompt: "Write your topic to search news")
             .onChange(of: topicToSearch, perform: { newTopic in
                 if newTopic != "" {
@@ -57,3 +72,16 @@ struct ContentView_Previews: PreviewProvider {
     }
 }
 
+struct safari : UIViewControllerRepresentable {
+    
+    var urlString: String
+    
+    func makeUIViewController(context: UIViewControllerRepresentableContext<safari>) -> SFSafariViewController {
+        let controller = SFSafariViewController(url: URL(string: urlString)!)
+        return controller
+    }
+    
+    func updateUIViewController(_ uiViewController: SFSafariViewController, context: UIViewControllerRepresentableContext<safari>) {
+        
+    }
+}
