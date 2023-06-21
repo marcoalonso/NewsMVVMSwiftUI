@@ -12,22 +12,27 @@ struct ArticleNewCell: View {
     let article: Noticia
     
     var body: some View {
-        VStack {
+        VStack(spacing: 15.0) {
             HStack {
                 ArticleNewRemoteImage(urlString: article.urlToImage ?? "")
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 120, height: 80)
+                    .frame(width: 100, height: 70)
                     .cornerRadius(12)
+                    
                 
                 Text(article.title ?? "")
-                    .font(.system(size: 18))
-                    .foregroundColor(.purple)
+                    .lineLimit(3)
+                    .font(.system(size: 15))
+                    .foregroundColor(.blue)
+                    .bold()
             }
             
             Text(article.description ?? "")
                 .font(.body)
                 .foregroundColor(.black)
-                .lineLimit(3)
+                .lineLimit(4)
+                .padding(.leading, 10)
+                .padding(.trailing, 10)
             
             HStack {
                 Text(article.source.name ?? "")
@@ -39,5 +44,8 @@ struct ArticleNewCell: View {
                     .foregroundColor(.red)
             }
         }
+        .background(.ultraThinMaterial)
+            .cornerRadius(12)
+        
     }
 }

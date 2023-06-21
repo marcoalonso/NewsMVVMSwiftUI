@@ -10,18 +10,30 @@ import SwiftUI
 struct NewsView: View {
     
     @StateObject private var viewModel = NewsViewModel()
-    @State private var topic = "ai"
-    private let topics = ["economica", "AI", "apple"]
+    @State private var topicSelected = ""
+    private let topics = ["economia", "ai", "apple", "twitter", "calor"]
     
     var body: some View {
-        VStack {
-            List(viewModel.news, id: \.title) { article in
+        NavigationStack {
+            VStack {
+                Picker("List of topics", selection: $topicSelected, content: {
+                    ForEach(topics, id: \.self) { topic in
+                        Text(topic)
+                    }
+                }).pickerStyle(.segmented)
+                .padding(15)
+                .onChange(of: topicSelected) { newTopic in
+                    viewModel.getNews(topic: newTopic)
+                }
+
                 
-                ArticleNewCell(article: article)
-                
+                List(viewModel.news, id: \.title) { article in
+                    ArticleNewCell(article: article)
+                }.listStyle(.plain)
+            }.onAppear {
+                viewModel.getNews(topic: topics[0])
             }
-        }.onAppear {
-            viewModel.getNews(topic: topic)
+            .navigationBarTitle("Top Global News")
         }
     }
 }
