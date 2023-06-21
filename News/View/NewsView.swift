@@ -15,13 +15,15 @@ struct NewsView: View {
     
     var body: some View {
         NavigationStack {
-            VStack {
+            VStack(spacing: 5.0) {
                 
                 TopicSegmentedView(viewModel: viewModel)
                 
                 List(viewModel.news, id: \.title) { article in
-                    ArticleNewCell(article: article)
-                }.listStyle(.plain)
+                    NavigationLink(destination: WebView(urlString: article.url ?? "")) {
+                        ArticleNewCell(article: article)
+                    }
+                }.listStyle(.inset)
                 
                 if viewModel.isLoading {
                     LoadingView()
@@ -39,9 +41,9 @@ struct NewsView: View {
             .alert(item: $viewModel.alertItem) { alertItem in
                 Alert(title: alertItem.title, message: alertItem.message, dismissButton: alertItem.dismissButton)
             }
-            .navigationBarTitle("Top Global News")
+            .navigationBarTitle("Top Global News", displayMode: .inline)
             .navigationBarItems(trailing: NavigationLink(destination: {
-                EmptyView()
+                FeedbackView()
             }, label: {
                 Image(systemName: "ellipsis.circle")
             }))
