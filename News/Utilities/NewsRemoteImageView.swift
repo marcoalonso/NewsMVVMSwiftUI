@@ -34,7 +34,7 @@ struct RemoteImage: View {
 }
 
 
-struct AppetizerRemoteImage: View {
+struct ArticleNewRemoteImage: View {
     
     @StateObject private var imageLoader = ImageLoader()
     var urlString: String
