@@ -13,7 +13,7 @@ struct NewsView: View {
     @StateObject private var viewModel = NewsViewModel()
     @State private var topicToSearch = ""
     @State var openURL = false
-    @State var articleSelected: Noticia?
+    @State private var urlArticle: String = ""
     
     var body: some View {
         NavigationStack {
@@ -24,11 +24,8 @@ struct NewsView: View {
                 List(viewModel.news, id: \.title) { article in
                     
                     Button {
-                        self.articleSelected = article
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            openURL = true
-                        }
-                        
+                        self.urlArticle = article.url ?? ""
+                        openURL = true
                     } label: {
                         ArticleNewCell(article: article)
                     }
@@ -41,14 +38,8 @@ struct NewsView: View {
                 
             }
             .sheet(isPresented: $openURL, content: {
-                ///Go to Web Page
-                if let url = articleSelected?.url {
-                    safari(urlString: url)
-                } else {
-                    DetailArticle(article: articleSelected ?? MockData.article)
-                }
-                
-                ///go to detail view
+                safari(urlString: $urlArticle)
+                ///Option 2 -> go to detail view
 //                DetailArticle(article: articleSelected ?? MockData.article)
             })
             .searchable(text: $topicToSearch, prompt: "Write your topic to search news")
@@ -80,7 +71,7 @@ struct ContentView_Previews: PreviewProvider {
 
 struct safari : UIViewControllerRepresentable {
     
-    var urlString: String
+    @Binding var urlString: String
     
     func makeUIViewController(context: UIViewControllerRepresentableContext<safari>) -> SFSafariViewController {
         let controller = SFSafariViewController(url: URL(string: urlString)!)

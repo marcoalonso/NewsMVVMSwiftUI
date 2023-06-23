@@ -51,12 +51,12 @@ struct DetailArticle: View {
                 .font(.body)
             }
             .frame(maxWidth: 300)
-            .sheet(isPresented: $openURL, content: {
-                ///Go to Web Page
-                if let url = article.url, url != "" {
-                    safari(urlString: url)
-                }
-            })
+//            .sheet(isPresented: $openURL, content: {
+//                ///Go to Web Page
+//                if let url = article.url, url != "" {
+//                    safari(urlString: url)
+//                }
+//            })
         }
     }
 }
