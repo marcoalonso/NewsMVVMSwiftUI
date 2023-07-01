@@ -8,20 +8,35 @@
 import SwiftUI
 
 struct FeedbackView: View {
+    
+    @State var isShowingActivityView = false
+    
     var body: some View {
         VStack {
-            Text("Feedback Screen")
-                
-            Text("Soon!")
+            List(actions) { action in
+                HStack {
+                    Image(systemName: action.icon)
+                        .resizable()
+                        .frame(width: 25, height: 25)
+                    
+                    Text(action.name)
+                        .font(.body)
+                }.padding(12)
+            }.listStyle(.plain)
+                .frame(height: 400)
             
+            Spacer()
+            
+                .navigationTitle("Mas Acciones")
+                .navigationBarItems(trailing: Button(action: {
+                    isShowingActivityView = true
+                }, label: {
+                    Image(systemName: "square.and.arrow.up.fill")
+                }))
         }
-        .font(.largeTitle)
-        .foregroundColor(.white)
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-            .background(
-                LinearGradient(gradient: Gradient(colors: [Color.white, Color.green]), startPoint: .top, endPoint: .bottom)
-                    .edgesIgnoringSafeArea(.all)
-            )
+        .sheet(isPresented: $isShowingActivityView, content: {
+                    ActivityView(activityItems: ["https://apps.apple.com/us/app/top-global-news/id6447653915se-world/id6447369429"])
+                })
     }
 }
 

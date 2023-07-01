@@ -11,7 +11,7 @@ final class NewsViewModel: ObservableObject {
     @Published var news: [Noticia] = []
     @Published var isLoading: Bool = false
     @Published var alertItem: AlertItem?
-    let topics = ["economia", "ai", "apple", "twitter", "calor"]
+    let topics = ["AMLO", "ai", "apple", "submarino", "calor"]
     
     func getNews(topic: String) {
         isLoading = true

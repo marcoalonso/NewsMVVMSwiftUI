@@ -39,8 +39,6 @@ struct NewsView: View {
             }
             .sheet(isPresented: $openURL, content: {
                 safari(urlString: $urlArticle)
-                ///Option 2 -> go to detail view
-//                DetailArticle(article: articleSelected ?? MockData.article)
             })
             .searchable(text: $topicToSearch, prompt: "Write your topic to search news")
             .onChange(of: topicToSearch, perform: { newTopic in

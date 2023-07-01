@@ -14,6 +14,7 @@ struct ArticleNewCell: View {
     var body: some View {
         VStack(spacing: 15.0) {
             HStack {
+                
                 ArticleNewRemoteImage(urlString: article.urlToImage ?? "")
                     .aspectRatio(contentMode: .fill)
                     .frame(width: 100, height: 70)
