@@ -25,7 +25,6 @@ struct ArticleNewCell: View {
                     .lineLimit(3)
                     .font(.system(size: 15))
                     .foregroundColor(.blue)
-                    .bold()
             }
             
             Text(article.description ?? "")

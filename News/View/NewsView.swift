@@ -52,6 +52,9 @@ struct NewsView: View {
                 Alert(title: alertItem.title, message: alertItem.message, dismissButton: alertItem.dismissButton)
             }
             .navigationBarTitle("Top Global News", displayMode: .inline)
+            .navigationBarItems(leading: NavigationLink(destination: FeedbackView(), label: {
+                Text("Mas")
+            }))
             .navigationBarItems(trailing: NavigationLink(destination: {
                 FeedbackView()
             }, label: {

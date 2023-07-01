@@ -10,18 +10,25 @@ import SwiftUI
 struct FeedbackView: View {
     
     @State var isShowingActivityView = false
+    @State var urlToShow = ""
+    @State var isShowingURL = false
     
     var body: some View {
         VStack {
             List(actions) { action in
-                HStack {
-                    Image(systemName: action.icon)
-                        .resizable()
-                        .frame(width: 25, height: 25)
-                    
-                    Text(action.name)
-                        .font(.body)
-                }.padding(12)
+                Button {
+                    urlToShow = action.url
+                    isShowingURL = true
+                } label: {
+                    HStack {
+                        Image(systemName: action.icon)
+                            .resizable()
+                            .frame(width: 25, height: 25)
+                        
+                        Text(action.name)
+                            .font(.body)
+                    }.padding(12)
+                }
             }.listStyle(.plain)
                 .frame(height: 400)
             
@@ -37,6 +44,9 @@ struct FeedbackView: View {
         .sheet(isPresented: $isShowingActivityView, content: {
                     ActivityView(activityItems: ["https://apps.apple.com/us/app/top-global-news/id6447653915se-world/id6447369429"])
                 })
+        .sheet(isPresented: $isShowingURL, content: {
+            safari(urlString: $urlToShow)
+        })
     }
 }
 
