@@ -12,3 +12,8 @@ Showing the webpage of the article using SafariServices
 
 <img width="385" alt="image" src="https://github.com/marcoalonso/NewsMVVMSwiftUI/assets/49013250/8d664812-2276-44ae-a093-01f05aa24fa8">
 
+FeedbackView
+![image](https://github.com/marcoalonso/NewsMVVMSwiftUI/assets/49013250/2287b115-d2a8-493f-8c33-6bea1cac4f5d)
+
+
+![image](https://github.com/marcoalonso/NewsMVVMSwiftUI/assets/49013250/6cafc90b-7287-421b-9d50-0f789e410061)
