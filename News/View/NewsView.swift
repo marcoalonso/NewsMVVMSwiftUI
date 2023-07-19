@@ -32,9 +32,6 @@ struct NewsView: View {
 
                 }.listStyle(.inset)
                 
-                if viewModel.isLoading {
-                    LoadingView()
-                }
                 
             }
             .sheet(isPresented: $openURL, content: {
@@ -43,10 +40,16 @@ struct NewsView: View {
             .searchable(text: $topicToSearch, prompt: "Write your topic to search news")
             .onChange(of: topicToSearch, perform: { newTopic in
                 if newTopic != "" {
-                    viewModel.getNews(topic: newTopic)
+                    withAnimation {
+                        viewModel.getNews(topic: newTopic)
+                    }
                 }
             })
-            .onAppear { viewModel.getNews(topic: viewModel.topics.first!)}
+            .onAppear {
+                withAnimation(.easeIn(duration: 0.5)) {
+                    viewModel.getNews(topic: viewModel.topics.first!)
+                }
+            }
             
             .alert(item: $viewModel.alertItem) { alertItem in
                 Alert(title: alertItem.title, message: alertItem.message, dismissButton: alertItem.dismissButton)

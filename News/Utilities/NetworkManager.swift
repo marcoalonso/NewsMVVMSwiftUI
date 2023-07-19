@@ -15,7 +15,11 @@ enum APError: Error {
     case decodingError
 }
 
-class NetworkManager: NSObject {
+class NetworkManager: NSObject, ObservableObject {
+    ///To use combine we need implement this var and adopt ObservableObject
+    @Published var listNews: [Noticia]?
+    @Published var errorMessage: String = ""
+    
     static let shared = NetworkManager()
     private let cache = NSCache<NSString, UIImage>()
     ///a1d105c3794c4e9db94dff5d4a19fda9
@@ -25,40 +29,66 @@ class NetworkManager: NSObject {
     
     private override init() {}
     
-    func getLisOfNews(topic: String, completed: @escaping (Result<[Noticia], APError>) -> Void ) {
-        guard let url = URL(string: NetworkManager.baseURL + topic) else {
-            completed(.failure(.invalidURL))
-            return
-        }
+    ///Using combine instead of closure
+    func getLisOfNews(topic: String) {
+        guard let url = URL(string: NetworkManager.baseURL + topic) else { return }
         
         let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            if let _ = error {
-                completed(.failure(.unableToComplete))
-                return
-            }
+            if let _ = error { return }
             
+            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else { return }
             
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                completed(.failure(.invalidResponse))
-                return
-            }
-            
-            guard let data = data else {
-                completed(.failure(.invalidData))
-                return
-            }
+            guard let data = data else { return }
             
             do {
                 let decoder = JSONDecoder()
                 let decodedResponse = try decoder.decode(NoticiaData.self, from: data)
-                completed(.success(decodedResponse.articles))
+                ///Combine way, publising any changes when data is ready
+                self.listNews = decodedResponse.articles
             } catch {
                 print("Debug: decoding error \(error.localizedDescription)")
-                completed(.failure(.decodingError))
+                self.errorMessage = error.localizedDescription
             }
         }
         task.resume()
     }
+    
+//    func getLisOfNews(topic: String, completed: @escaping (Result<[Noticia], APError>) -> Void ) {
+//        guard let url = URL(string: NetworkManager.baseURL + topic) else {
+//            completed(.failure(.invalidURL))
+//            return
+//        }
+//
+//        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+//            if let _ = error {
+//                completed(.failure(.unableToComplete))
+//                return
+//            }
+//
+//
+//            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
+//                completed(.failure(.invalidResponse))
+//                return
+//            }
+//
+//            guard let data = data else {
+//                completed(.failure(.invalidData))
+//                return
+//            }
+//
+//            do {
+//                let decoder = JSONDecoder()
+//                let decodedResponse = try decoder.decode(NoticiaData.self, from: data)
+//                completed(.success(decodedResponse.articles))
+//                ///Combine way, publising any changes when data is ready
+//                self.listNews = decodedResponse.articles
+//            } catch {
+//                print("Debug: decoding error \(error.localizedDescription)")
+//                completed(.failure(.decodingError))
+//            }
+//        }
+//        task.resume()
+//    }
     
     func downloadImage(from urlString: String, completed: @escaping (UIImage?) -> Void) {
         
